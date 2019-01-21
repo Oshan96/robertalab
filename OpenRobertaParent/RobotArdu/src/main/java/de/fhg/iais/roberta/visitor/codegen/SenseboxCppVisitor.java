@@ -6,6 +6,7 @@ import java.util.Map;
 
 import de.fhg.iais.roberta.components.Configuration;
 import de.fhg.iais.roberta.components.ConfigurationComponent;
+import de.fhg.iais.roberta.components.UsedActor;
 import de.fhg.iais.roberta.syntax.BlocklyConstants;
 import de.fhg.iais.roberta.syntax.Phrase;
 import de.fhg.iais.roberta.syntax.SC;
@@ -19,6 +20,7 @@ import de.fhg.iais.roberta.syntax.action.sound.ToneAction;
 import de.fhg.iais.roberta.syntax.actors.arduino.PinReadValueAction;
 import de.fhg.iais.roberta.syntax.actors.arduino.PinWriteValueAction;
 import de.fhg.iais.roberta.syntax.actors.arduino.RelayAction;
+import de.fhg.iais.roberta.syntax.actors.arduino.sensebox.SendDataAction;
 import de.fhg.iais.roberta.syntax.lang.blocksequence.MainTask;
 import de.fhg.iais.roberta.syntax.lang.expr.ColorConst;
 import de.fhg.iais.roberta.syntax.lang.expr.Expr;
@@ -43,6 +45,7 @@ public class SenseboxCppVisitor extends AbstractCommonArduinoCppVisitor implemen
         super(brickConfiguration, programPhrases, indentation);
         SenseboxUsedHardwareCollectorVisitor codePreprocessVisitor = new SenseboxUsedHardwareCollectorVisitor(programPhrases);
         this.usedVars = codePreprocessVisitor.getVisitedVars();
+        this.usedActors = codePreprocessVisitor.getUsedActors();
         this.loopsLabels = codePreprocessVisitor.getloopsLabelContainer();
     }
 
@@ -302,6 +305,13 @@ public class SenseboxCppVisitor extends AbstractCommonArduinoCppVisitor implemen
         return null;
     }
 
+    @Override
+    public Void visitDataSendAction(SendDataAction<Void> sendDataAction) {
+        this.sb.append("_osem.uploadMeasurement(\"Keine Eingabe\",\"SensorID\");");
+        this.nlIndent();
+        return null;
+    }
+
     private void generateConfigurationSetup() {
         for ( ConfigurationComponent usedConfigurationBlock : this.configuration.getConfigurationComponents() ) {
             switch ( usedConfigurationBlock.getComponentType() ) {
@@ -326,13 +336,13 @@ public class SenseboxCppVisitor extends AbstractCommonArduinoCppVisitor implemen
                     this.nlIndent();
                     break;
                 case SC.TEMPERATURE:
-                    this.sb.append("_bmp280_").append(usedConfigurationBlock.getUserDefinedPortName()).append(".begin()");
+                    this.sb.append("_bmp280_").append(usedConfigurationBlock.getUserDefinedPortName()).append(".begin();");
                     this.nlIndent();
                     break;
                 case SC.LIGHTVEML:
-                    this.sb.append("_veml_").append(usedConfigurationBlock.getUserDefinedPortName()).append(".begin()");
+                    this.sb.append("_veml_").append(usedConfigurationBlock.getUserDefinedPortName()).append(".begin();");
                     this.nlIndent();
-                    this.sb.append("_tsl_").append(usedConfigurationBlock.getUserDefinedPortName()).append(".begin()");
+                    this.sb.append("_tsl_").append(usedConfigurationBlock.getUserDefinedPortName()).append(".begin();");
                     this.nlIndent();
                     break;
                 case SC.WIRELESS:
@@ -406,7 +416,14 @@ public class SenseboxCppVisitor extends AbstractCommonArduinoCppVisitor implemen
                     this.nlIndent();
                     break;
                 case SC.ULTRASONIC:
-                    this.sb.append("Ultrasonic _hcsr04_").append(blockName).append(";");
+                    this.sb
+                        .append("Ultrasonic _hcsr04_")
+                        .append(blockName)
+                        .append("(")
+                        .append(cc.getProperty("TRIG"))
+                        .append(", ")
+                        .append(cc.getProperty("ECHO"))
+                        .append(");");
                     this.nlIndent();
                     break;
                 case SC.LIGHTVEML:
@@ -417,6 +434,13 @@ public class SenseboxCppVisitor extends AbstractCommonArduinoCppVisitor implemen
                     break;
                 case SC.WIRELESS:
                     this.sb.append("Bee* _bee_").append(blockName).append(" = new Bee();");
+                    for ( UsedActor usedActor : this.usedActors ) {
+                        if ( usedActor.getType().equals(SC.SEND_DATA) ) {
+                            this.nlIndent();
+                            this.sb.append("OpenSenseMap _osem(\"" + "box_id goes here" + "\", _bee_").append(blockName).append(");");
+                            this.nlIndent();
+                        }
+                    }
                     this.nlIndent();
                     break;
                 default:

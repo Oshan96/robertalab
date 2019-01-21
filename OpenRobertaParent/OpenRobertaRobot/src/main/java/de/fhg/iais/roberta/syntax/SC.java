@@ -105,4 +105,5 @@ public interface SC {
     String UVLIGHT = "UVLIGHT";
     String LIGHTVEML = "LIGHTVEML";
     String WIRELESS = "WIRELESS";
+    String SEND_DATA = "SEND_DATA";
 }

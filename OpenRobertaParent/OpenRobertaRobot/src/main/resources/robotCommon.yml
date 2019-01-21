@@ -255,6 +255,10 @@ block:
       category: ACTOR
       implementor: de.fhg.iais.roberta.syntax.action.motor.differential.MotorDriveStopAction
       type: [robActions_motorDiff_stop]
+  DATA_SEND_ACTION:
+      category: ACTOR
+      implementor: de.fhg.iais.roberta.syntax.actors.arduino.sensebox.SendDataAction
+      type: [robActions_send_data_to_opensensemap]
   MAIN_TASK:
       category: TASK
       implementor: de.fhg.iais.roberta.syntax.lang.blocksequence.MainTask

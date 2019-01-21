@@ -4,11 +4,14 @@ import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import de.fhg.iais.roberta.components.UsedActor;
 import de.fhg.iais.roberta.components.UsedSensor;
 import de.fhg.iais.roberta.syntax.Phrase;
+import de.fhg.iais.roberta.syntax.SC;
 import de.fhg.iais.roberta.syntax.actors.arduino.PinReadValueAction;
 import de.fhg.iais.roberta.syntax.actors.arduino.PinWriteValueAction;
 import de.fhg.iais.roberta.syntax.actors.arduino.RelayAction;
+import de.fhg.iais.roberta.syntax.actors.arduino.sensebox.SendDataAction;
 import de.fhg.iais.roberta.syntax.sensor.generic.VemlLightSensor;
 import de.fhg.iais.roberta.visitor.hardware.IArduinoVisitor;
 
@@ -46,6 +49,15 @@ public final class SenseboxUsedHardwareCollectorVisitor extends AbstractUsedHard
 
     @Override
     public Void visitVemlLightSensor(VemlLightSensor<Void> lightSensor) {
+        return null;
+    }
+
+    @Override
+    public Void visitDataSendAction(SendDataAction<Void> sendDataAction) {
+        // TODO check that WiFi config block is used, otherwise throw an exception
+        // and show user the error, that they must use this block in conjunction
+        // with WiFi/ethernet/LoRa
+        this.usedActors.add(new UsedActor(SC.NONE, SC.SEND_DATA));
         return null;
     }
 
