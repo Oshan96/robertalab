@@ -260,6 +260,7 @@ Blockly.Msg.HINT_USER_NAME = "Vložte své skutečné jméno, pokud chcete. Nikd
 Blockly.Msg.HINT_USER_PASSWORT = "12345 není bezpečné heslo. Raději vymyslete nějakou bezpečnou kombinaci číslic a písmem, které nezapomenete.";
 Blockly.Msg.HINT_USER_PASSWORT_CONFIRM = "Hotovo? Pro jistotu se přesvědčte!";
 Blockly.Msg.HUMIDITY_TOOLTIP = "Represents a humidity sensor.";  // untranslated
+Blockly.Msg.ID = "ID";  // untranslated
 Blockly.Msg.IF_TOOLTIP = "Zkontroluje podmínku v »když«. Pokud je podmínka splněna, provede akce v části »tak«.";
 Blockly.Msg.IMAGE_GET_TOOLTIP = "Vrátí vybraný obrázek.";
 Blockly.Msg.IMAGE_GET_TOOLTIP_ANGRY = "rozzlobený";

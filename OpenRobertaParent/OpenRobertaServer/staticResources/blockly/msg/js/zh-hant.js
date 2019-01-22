@@ -260,6 +260,7 @@ Blockly.Msg.HINT_USER_NAME = "如果你願意, 在這裡輸入你的真實姓名
 Blockly.Msg.HINT_USER_PASSWORT = "12345沒有密碼安全性。寧可想一個你不會忘記的數字和字母的安全組合。";
 Blockly.Msg.HINT_USER_PASSWORT_CONFIRM = "明白了嗎？最好確認過!";
 Blockly.Msg.HUMIDITY_TOOLTIP = "代表濕度感應器";
+Blockly.Msg.ID = "ID";  // untranslated
 Blockly.Msg.IF_TOOLTIP = "檢查»if«中的條件。如果條件為 true, 則執行»do«操作。";
 Blockly.Msg.IMAGE_GET_TOOLTIP = "返回所選圖像。";
 Blockly.Msg.IMAGE_GET_TOOLTIP_ANGRY = "生氣";

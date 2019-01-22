@@ -260,6 +260,7 @@ Blockly.Msg.HINT_USER_NAME = "Enter your real name here if you like. This is jus
 Blockly.Msg.HINT_USER_PASSWORT = "12345 is no secure password. Rather think of a safe combination of numbers and letters that you will not forget.";  // untranslated
 Blockly.Msg.HINT_USER_PASSWORT_CONFIRM = "Got it? Better make sure!";  // untranslated
 Blockly.Msg.HUMIDITY_TOOLTIP = "Represents a humidity sensor.";  // untranslated
+Blockly.Msg.ID = "ID";  // untranslated
 Blockly.Msg.IF_TOOLTIP = "Comprueba la condición en 'si'. Si la condición es verdadera, ejecuta la acción 'entonces'.";
 Blockly.Msg.IMAGE_GET_TOOLTIP = "Devuelve la imagen elegida.";
 Blockly.Msg.IMAGE_GET_TOOLTIP_ANGRY = "enfadado";

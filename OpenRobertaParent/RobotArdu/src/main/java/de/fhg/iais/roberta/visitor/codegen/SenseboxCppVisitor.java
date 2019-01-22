@@ -2,6 +2,7 @@ package de.fhg.iais.roberta.visitor.codegen;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import de.fhg.iais.roberta.components.Configuration;
@@ -26,6 +27,7 @@ import de.fhg.iais.roberta.syntax.lang.expr.ColorConst;
 import de.fhg.iais.roberta.syntax.lang.expr.Expr;
 import de.fhg.iais.roberta.syntax.lang.expr.RgbColor;
 import de.fhg.iais.roberta.syntax.lang.expr.Var;
+import de.fhg.iais.roberta.syntax.sensor.Sensor;
 import de.fhg.iais.roberta.syntax.sensor.generic.HumiditySensor;
 import de.fhg.iais.roberta.syntax.sensor.generic.KeysSensor;
 import de.fhg.iais.roberta.syntax.sensor.generic.LightSensor;
@@ -46,6 +48,7 @@ public class SenseboxCppVisitor extends AbstractCommonArduinoCppVisitor implemen
         SenseboxUsedHardwareCollectorVisitor codePreprocessVisitor = new SenseboxUsedHardwareCollectorVisitor(programPhrases);
         this.usedVars = codePreprocessVisitor.getVisitedVars();
         this.usedActors = codePreprocessVisitor.getUsedActors();
+        this.usedSensors = codePreprocessVisitor.getUsedSensors();
         this.loopsLabels = codePreprocessVisitor.getloopsLabelContainer();
     }
 
@@ -307,8 +310,47 @@ public class SenseboxCppVisitor extends AbstractCommonArduinoCppVisitor implemen
 
     @Override
     public Void visitDataSendAction(SendDataAction<Void> sendDataAction) {
-        this.sb.append("_osem.uploadMeasurement(\"Keine Eingabe\",\"SensorID\");");
-        this.nlIndent();
+        List<Sensor<Void>> listOfSensors = sendDataAction.getListOfSenors();
+        for ( Sensor<Void> sensor : listOfSensors ) {
+            this.sb.append("_osem.uploadMeasurement(");
+            sensor.visit(this);
+            this.sb.append(",");
+            System.out.println(sensor.getKind().getName());
+            switch ( sensor.getKind().getName() ) {
+                case "HUMIDITY_SENSING":
+                    this.sb.append("_hdc1080_id_");
+                    for ( ConfigurationComponent usedConfigurationBlock : this.configuration.getConfigurationComponents() ) {
+                        switch ( usedConfigurationBlock.getComponentType() ) {
+                            case SC.HUMIDITY:
+                                this.sb.append(usedConfigurationBlock.getUserDefinedPortName());
+                                break;
+                        }
+                    }
+                    break;
+                case "TEMPERATURE_SENSING":
+                    this.sb.append("_bmp280_id_");
+                    for ( ConfigurationComponent usedConfigurationBlock : this.configuration.getConfigurationComponents() ) {
+                        switch ( usedConfigurationBlock.getComponentType() ) {
+                            case SC.TEMPERATURE:
+                                this.sb.append(usedConfigurationBlock.getUserDefinedPortName());
+                                break;
+                        }
+                    }
+                    break;
+                case "VEMLLIGHT_SENSING":
+                    this.sb.append("_veml_tsl_id_");
+                    for ( ConfigurationComponent usedConfigurationBlock : this.configuration.getConfigurationComponents() ) {
+                        switch ( usedConfigurationBlock.getComponentType() ) {
+                            case SC.LIGHTVEML:
+                                this.sb.append(usedConfigurationBlock.getUserDefinedPortName());
+                                break;
+                        }
+                    }
+                    break;
+            }
+            this.sb.append(");");
+            this.nlIndent();
+        }
         return null;
     }
 
@@ -410,9 +452,13 @@ public class SenseboxCppVisitor extends AbstractCommonArduinoCppVisitor implemen
                 case SC.HUMIDITY:
                     this.sb.append("HDC1080 _hdc1080_").append(blockName).append(";");
                     this.nlIndent();
+                    this.sb.append("String _hdc1080_id_").append(blockName).append(" = \"").append(cc.getProperty("ID")).append("\";");
+                    this.nlIndent();
                     break;
                 case SC.TEMPERATURE:
                     this.sb.append("BMP280 _bmp280_").append(blockName).append(";");
+                    this.nlIndent();
+                    this.sb.append("String _bmp280_id_").append(blockName).append(" = \"").append(cc.getProperty("ID")).append("\";");
                     this.nlIndent();
                     break;
                 case SC.ULTRASONIC:
@@ -431,13 +477,15 @@ public class SenseboxCppVisitor extends AbstractCommonArduinoCppVisitor implemen
                     this.nlIndent();
                     this.sb.append("TSL45315 _tsl_").append(blockName).append(";");
                     this.nlIndent();
+                    this.sb.append("String _veml_tsl_id_").append(blockName).append(" = \"").append(cc.getProperty("ID")).append("\";");
+                    this.nlIndent();
                     break;
                 case SC.WIRELESS:
                     this.sb.append("Bee* _bee_").append(blockName).append(" = new Bee();");
                     for ( UsedActor usedActor : this.usedActors ) {
                         if ( usedActor.getType().equals(SC.SEND_DATA) ) {
                             this.nlIndent();
-                            this.sb.append("OpenSenseMap _osem(\"" + "box_id goes here" + "\", _bee_").append(blockName).append(");");
+                            this.sb.append("OpenSenseMap _osem(\"").append(cc.getProperty("BOX_ID")).append("\", _bee_").append(blockName).append(");");
                             this.nlIndent();
                         }
                     }

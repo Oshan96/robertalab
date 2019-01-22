@@ -1,8 +1,6 @@
 package de.fhg.iais.roberta.visitor.collect;
 
 import java.util.ArrayList;
-import java.util.LinkedHashSet;
-import java.util.Set;
 
 import de.fhg.iais.roberta.components.UsedActor;
 import de.fhg.iais.roberta.components.UsedSensor;
@@ -12,6 +10,8 @@ import de.fhg.iais.roberta.syntax.actors.arduino.PinReadValueAction;
 import de.fhg.iais.roberta.syntax.actors.arduino.PinWriteValueAction;
 import de.fhg.iais.roberta.syntax.actors.arduino.RelayAction;
 import de.fhg.iais.roberta.syntax.actors.arduino.sensebox.SendDataAction;
+import de.fhg.iais.roberta.syntax.sensor.generic.HumiditySensor;
+import de.fhg.iais.roberta.syntax.sensor.generic.TemperatureSensor;
 import de.fhg.iais.roberta.syntax.sensor.generic.VemlLightSensor;
 import de.fhg.iais.roberta.visitor.hardware.IArduinoVisitor;
 
@@ -21,9 +21,6 @@ import de.fhg.iais.roberta.visitor.hardware.IArduinoVisitor;
  * @author VinArt
  */
 public final class SenseboxUsedHardwareCollectorVisitor extends AbstractUsedHardwareCollectorVisitor implements IArduinoVisitor<Void> {
-
-    protected final Set<UsedSensor> usedSensors = new LinkedHashSet<>();
-
     public SenseboxUsedHardwareCollectorVisitor(ArrayList<ArrayList<Phrase<Void>>> phrasesSet) {
         super(null);
         this.check(phrasesSet);
@@ -58,6 +55,18 @@ public final class SenseboxUsedHardwareCollectorVisitor extends AbstractUsedHard
         // and show user the error, that they must use this block in conjunction
         // with WiFi/ethernet/LoRa
         this.usedActors.add(new UsedActor(SC.NONE, SC.SEND_DATA));
+        return null;
+    }
+
+    @Override
+    public Void visitTemperatureSensor(TemperatureSensor<Void> temperatureSensor) {
+        this.usedSensors.add(new UsedSensor(temperatureSensor.getPort(), SC.TEMPERATURE, temperatureSensor.getMode()));
+        return null;
+    }
+
+    @Override
+    public Void visitHumiditySensor(HumiditySensor<Void> humiditySensor) {
+        this.usedSensors.add(new UsedSensor(humiditySensor.getPort(), SC.HUMIDITY, humiditySensor.getMode()));
         return null;
     }
 

@@ -260,6 +260,7 @@ Blockly.Msg.HINT_USER_NAME = "Здесь вы можете ввести свое
 Blockly.Msg.HINT_USER_PASSWORT = "12345 -- не безопасный пароль. Придумайте новый.";
 Blockly.Msg.HINT_USER_PASSWORT_CONFIRM = "Повторите пароль.";
 Blockly.Msg.HUMIDITY_TOOLTIP = "Represents a humidity sensor.";  // untranslated
+Blockly.Msg.ID = "ID";  // untranslated
 Blockly.Msg.IF_TOOLTIP = "Проверяет увловие »если«. Если условие выполняется, выполняет действие в условном блоке.";
 Blockly.Msg.IMAGE_GET_TOOLTIP = "Возвращает выбранное изображение.";
 Blockly.Msg.IMAGE_GET_TOOLTIP_ANGRY = "злой";
