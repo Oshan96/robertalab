@@ -315,7 +315,6 @@ public class SenseboxCppVisitor extends AbstractCommonArduinoCppVisitor implemen
             this.sb.append("_osem.uploadMeasurement(");
             sensor.visit(this);
             this.sb.append(",");
-            System.out.println(sensor.getKind().getName());
             switch ( sensor.getKind().getName() ) {
                 case "HUMIDITY_SENSING":
                     this.sb.append("_hdc1080_id_");

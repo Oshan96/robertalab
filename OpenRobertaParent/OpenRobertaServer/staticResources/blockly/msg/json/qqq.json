@@ -1484,5 +1484,12 @@
 	"POPUP_MULTROBOTS_NOPROGRAMS": "",
 	"MENU_RUN_MULT_SIM": "",
 	"ACTION_WIRELESS": "",
-	"ID": ""
+	"ID": "",
+	"WIRELESS_TOOLTIP": "",
+	"BUZZER_TOOLTIP": "",
+	"LIGHTVEML_TOOLTIP": "",
+	"SSID": "",
+	"BOX_ID": "",
+	"PASSWORD": "",
+	"CONNECTOR": ""
 }

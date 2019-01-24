@@ -1,7 +1,7 @@
 {
 	"@metadata": {
 		"author": "Ellen Spertus <ellen.spertus@gmail.com>",
-		"lastupdated": "2019-01-22 14:16:40.015318",
+		"lastupdated": "2019-01-24 11:53:46.929105",
 		"locale": "en",
 		"messagedocumentation" : "qqq"
 	},
@@ -1490,5 +1490,12 @@
 	"POPUP_MULTROBOTS_NOPROGRAMS": "Please create and store at least two programs which then can be executed each by a simulated robot!",
 	"MENU_RUN_MULT_SIM": "multiple robot simulation ...",
 	"ACTION_WIRELESS": "WiFi connection",
-	"ID": "ID"
+	"ID": "ID",
+	"WIRELESS_TOOLTIP": "Represents a wireless connection",
+	"BUZZER_TOOLTIP": "Represents a buzzer",
+	"LIGHTVEML_TOOLTIP": "Represents a combined VEML/TSL visible and UV light sensor",
+	"SSID": "SSID",
+	"BOX_ID": "Device ID",
+	"PASSWORD": "Password",
+	"CONNECTOR": "Connector"
 }

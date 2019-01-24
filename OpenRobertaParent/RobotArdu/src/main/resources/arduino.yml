@@ -66,3 +66,7 @@ block:
       category: ACTOR
       implementor: de.fhg.iais.roberta.syntax.actors.arduino.mbot.ReceiveIRAction
       type: [robCommunication_ir_receiveBlock]
+  DATA_SEND_ACTION:
+      category: ACTOR
+      implementor: de.fhg.iais.roberta.syntax.actors.arduino.sensebox.SendDataAction
+      type: [robActions_send_data_to_opensensemap]
