@@ -1,13 +1,16 @@
 package de.fhg.iais.roberta.syntax.actors.arduino.sensebox;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
 import de.fhg.iais.roberta.blockly.generated.Block;
+import de.fhg.iais.roberta.blockly.generated.Mutation;
 import de.fhg.iais.roberta.blockly.generated.Value;
 import de.fhg.iais.roberta.syntax.BlockTypeContainer;
 import de.fhg.iais.roberta.syntax.BlocklyBlockProperties;
 import de.fhg.iais.roberta.syntax.BlocklyComment;
+import de.fhg.iais.roberta.syntax.BlocklyConstants;
 import de.fhg.iais.roberta.syntax.Phrase;
 import de.fhg.iais.roberta.syntax.action.Action;
 import de.fhg.iais.roberta.syntax.sensor.Sensor;
@@ -58,6 +61,8 @@ public class SendDataAction<V> extends Action<V> {
      */
     public static <V> Phrase<V> jaxbToAst(Block block, AbstractJaxb2Ast<V> helper) {
         List<Sensor<V>> extractedSensors = new ArrayList<>();
+        Mutation numberOfPluggedInSensors = block.getMutation();
+        BigInteger numberOfSensros = numberOfPluggedInSensors.getItems();
         for ( Value value : block.getValue() ) {
             extractedSensors.add((Sensor<V>) helper.extractValue(block.getValue(), new ExprParam("SENSOR", BlocklyType.ANY)));
         }
@@ -68,8 +73,14 @@ public class SendDataAction<V> extends Action<V> {
     public Block astToBlock() {
         Block jaxbDestination = new Block();
         Ast2JaxbHelper.setBasicProperties(this, jaxbDestination);
-        for ( Sensor<V> sensor : this.listOfSensors ) {
-            Ast2JaxbHelper.addValue(jaxbDestination, "SENSOR", sensor);
+
+        int numberOfSensors = getListOfSenors().size();
+        List<Sensor<V>> sensors = getListOfSenors();
+        Mutation mutation = new Mutation();
+        mutation.setItems(BigInteger.valueOf(numberOfSensors));
+        jaxbDestination.setMutation(mutation);
+        for ( int i = 0; i < numberOfSensors; i++ ) {
+            Ast2JaxbHelper.addValue(jaxbDestination, BlocklyConstants.SENSOR + i, sensors.get(i));
         }
         return jaxbDestination;
     }
